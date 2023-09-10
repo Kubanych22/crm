@@ -1,0 +1,17 @@
+.main__section {
+  padding: 25px 0;
+}
+
+.main__section-title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.main__section-link {
+  max-width: 230px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 15px 0;
+  font-size: 16px;
+  text-align: center;
+}

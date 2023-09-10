@@ -1,0 +1,97 @@
+
+.main__table {
+  overflow-x: auto;
+}
+
+.table {
+  min-width: 1100px;
+  border-collapse: collapse;
+  border-left: none;
+  border-bottom: none;
+  border-right: none;
+  border-top: 0.1rem solid rgba(190, 195, 220, 0.27);
+}
+
+.table__thead {
+  height: 45px;
+  text-transform: uppercase;
+}
+
+.table .table__thead tr td,
+.table .table__tbody tr td {
+  padding-left: 15px;
+}
+
+.table__thead tr {
+  border-bottom: 0.1rem solid rgba(190, 195, 220, 0.27);
+}
+
+.table__tbody {
+  height: 60px;
+}
+
+.table__tbody tr {
+  border-top: 0.1rem solid rgba(190, 195, 220, 0.27);
+  border-bottom: 0.1rem solid rgba(190, 195, 220, 0.27);
+}
+
+.table__tbody tr:last-child {
+  border-bottom: none;
+}
+
+.table__button-no-img,
+.table__button-contain-img,
+.table__button-edit,
+.table__button-delete {
+  cursor: pointer;
+}
+
+.table__thead tr td:nth-child(2),
+.table__tbody tr td:nth-child(2),
+.table__thead tr td:nth-child(3),
+.table__tbody tr td:nth-child(3) {
+  padding-left: 0;
+}
+
+.table__thead tr td:nth-child(4),
+.table__tbody tr td:nth-child(4),
+.table__thead tr td:nth-child(5),
+.table__tbody tr td:nth-child(5),
+.table__thead tr td:nth-child(6),
+.table__thead tr td:nth-child(7) {
+  padding-left: 0;
+  text-align: center;
+}
+
+.table__tbody tr td:nth-child(6),
+.table__tbody tr td:nth-child(7) {
+  padding-left: 0;
+  padding-right: 15px;
+  text-align: right;
+}
+
+.table__show {
+  width: 100px;
+  text-align: right;
+}
+
+.table__select {
+  padding-left: 10px;
+}
+
+.table__select label {
+  display: block;
+  cursor: pointer;
+}
+
+.table__select select {
+  width: 18px;
+  border: none;
+  cursor: pointer;
+}
+
+.table__left,
+.table__right {
+  text-align: center;
+  cursor: pointer;
+}
