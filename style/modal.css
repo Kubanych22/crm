@@ -1,7 +1,13 @@
+.open-modal {
+  display: flex;
+}
+.close-modal {
+  display: none;
+}
 .modal {
   position: fixed;
   inset: 0;
-  display: none;
+  /*display: none;*/
   /*display: flex;*/
   background-color: rgba(0, 0, 0, 0.6);
   overflow-y: auto;
