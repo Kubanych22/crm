@@ -3,7 +3,7 @@ const openModal = document.querySelector('.modal');
 openModal.classList.remove('close-modal');
 openModal.classList.add('open-modal');
 
-const closeModal = document.querySelector('.modal');
+// const closeModal = document.querySelector('.modal');
 
 // closeModal.classList.remove('open-modal');
 // closeModal.classList.add('close-modal');
