@@ -1,30 +1,22 @@
-const openModal = document.querySelector('.modal');
+const modal = document.querySelector('.modal');
+const formContainer = document.querySelector('.modal__container')
+const openModalBtn = document.querySelector('.main__button');
 
-openModal.classList.remove('close-modal');
-openModal.classList.add('open-modal');
+openModalBtn.addEventListener('click', () => {  
+  modal.classList.remove('close-modal');
+  modal.classList.add('open-modal');
+});
 
-// const closeModal = document.querySelector('.modal');
+formContainer.addEventListener('click', (event) => {
+  event.stopPropagation();
+  const isModalOpen = event.target.closest('.modal__close');
+  if (isModalOpen) {
+    modal.classList.remove('open-modal');
+    modal.classList.add('close-modal');
+  }
+});
 
-// closeModal.classList.remove('open-modal');
-// closeModal.classList.add('close-modal');
-
-const modalTitle = document.querySelector('.modal__title').innerHTML;
-console.log(modalTitle);
-
-const modalCloseButton = document.querySelector('.modal__close');
-console.log(modalCloseButton);
-
-const productId = document.querySelector('.modal__product-id').innerHTML;
-console.log(productId);
-
-const modalForm = document.querySelector('.modal__form');
-console.log(modalForm);
-
-const discountCheckBox = document.querySelector('.form__label.checkbox');
-console.log(discountCheckBox);
-
-const discountCheckBoxInput = document.querySelector('.checkbox__input');
-console.log(discountCheckBoxInput);
-
-const totalCostProducts = document.querySelector('.form__cost-total').innerHTML;
-console.log(totalCostProducts);
+modal.addEventListener('click', () => {
+    modal.classList.remove('open-modal');
+    modal.classList.add('close-modal');
+})
