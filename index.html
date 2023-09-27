@@ -20,7 +20,7 @@
   <section class="container main__container">
     <div class="main__head">
       <h1 class="main__title">crm</h1>
-      <p class="main__total">Итоговая стоимость: <span>$900.00</span></p>
+      <p class="main__total">Итоговая стоимость: <span class="main__total-price"></span></p>
     </div>
       <hr class="main__line line">
     <div class="main__wrapper">
@@ -66,7 +66,7 @@
               <td>шт</td>
               <td>5</td>
               <td>$100</td>
-              <td>$500</td>
+              <td class="total__cost">$500</td>
               <td class="table__button-no-img">
                 <button>
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -98,7 +98,7 @@
               <td>шт</td>
               <td>12</td>
               <td>$14</td>
-              <td>$168</td>
+              <td class="total__cost">$168</td>
               <td class="table__button-contain-img">
                 <button>
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -131,7 +131,7 @@
               <td>шт</td>
               <td>5</td>
               <td>$100</td>
-              <td>$500</td>
+              <td class="total__cost">$500</td>
               <td class="table__button-contain-img">
                 <button>
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -164,7 +164,7 @@
               <td>шт</td>
               <td>5</td>
               <td>$100</td>
-              <td>$500</td>
+              <td class="total__cost">$500</td>
               <td class="table__button-contain-img">
                 <button>
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -197,7 +197,7 @@
               <td>шт</td>
               <td>5</td>
               <td>$100</td>
-              <td>$500</td>
+              <td class="total__cost">$500</td>
               <td class="table__button-contain-img">
                 <button>
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -230,7 +230,7 @@
               <td>шт</td>
               <td>5</td>
               <td>$100</td>
-              <td>$500</td>
+              <td class="total__cost">$500</td>
               <td class="table__button-contain-img">
                 <button>
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -263,7 +263,7 @@
               <td>шт</td>
               <td>5</td>
               <td>$100</td>
-              <td>$500</td>
+              <td class="total__cost">$500</td>
               <td class="table__button-contain-img">
                 <button>
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -296,7 +296,7 @@
               <td>шт</td>
               <td>5</td>
               <td>$100</td>
-              <td>$500</td>
+              <td class="total__cost">$500</td>
               <td class="table__button-contain-img">
                 <button>
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -329,7 +329,7 @@
               <td>шт</td>
               <td>5</td>
               <td>$100</td>
-              <td>$500</td>
+              <td class="total__cost">$500</td>
               <td class="table__button-contain-img">
                 <button>
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -362,7 +362,7 @@
               <td>шт</td>
               <td>5</td>
               <td>$100</td>
-              <td>$500</td>
+              <td class="total__cost">$500</td>
               <td class="table__button-contain-img">
                 <button>
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -437,10 +437,11 @@
 
 <div class="modal close-modal">
   <div class="modal__container">
-    <form class="modal__form form" action="https://jsonplaceholder.typicode.com/posts" method="post">
+<!--    <form class="modal__form form" action="https://jsonplaceholder.typicode.com/posts" method="post">-->
+    <form class="modal__form form">
       <div class="modal__product">
         <h2 class="modal__title">Добавить товар</h2>
-        <p class="modal__product-id">id: 201910241</p>
+        <p class="modal__product-id">id: <span>201910241</span></p>
       </div>
       <hr class="form__line line">
       <fieldset class="form__field">
@@ -472,13 +473,14 @@
         </label>
 
         <label class="form__label checkbox">
-          <span class="form__label-text">Дисконт</span>
-          <input class="form__input checkbox__input" type="checkbox" name="discount" checked>
+          <span class="form__label-text">Дисконт, %</span>
+          <input class="form__input checkbox__input" type="checkbox" name="checkbox__discount">
+          <input class="form__input discount__input" type="number" step="any" name="discount">
         </label>
 
         <label class="form__label form__label-last">
           <span class="form__label-text">Цена</span>
-          <input class="form__input" type="number" step="any" name="price">
+          <input class="form__input form__input-price" type="number" step="any" name="price">
         </label>
 
         <label class="form__label form__button btn">
@@ -490,7 +492,7 @@
       <fieldset class="form__result">
         <p class="form__cost">
           <span class="form__cost-text">Итоговая стоимость:</span>
-          <span class="form__cost-total"> $ 900.00</span>
+          <span class="form__cost-total">$900.00</span>
         </p>
         <button class="form__submit-button btn" type="submit">Добавить товар</button>
       </fieldset>
