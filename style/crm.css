@@ -64,6 +64,15 @@
   color: #25213b;
 }
 
+.main__filter-img {
+  width: 24px;
+  height: 30px;
+  background-image: url("../img/filter.svg");
+  background-repeat: no-repeat;
+  background-position: -2px 5px;
+  background-size: contain;
+}
+
 .search {
   display: block;
   margin-right: auto;
@@ -75,6 +84,8 @@
 
 .search__img {
   position: absolute;
+  background-image: url("../img/search.svg");
+  background-repeat: no-repeat;
   top: 12px;
   left: 10px;
   z-index: 1;
@@ -97,6 +108,42 @@
 .search__input::placeholder {
   font-size: 14px;
   color: #6e6893;
+}
+
+.button-no-img {
+  width: 23px;
+  height: 27px;
+  background-image: url("../img/no-image.svg");
+  background-repeat: no-repeat;
+  background-position: -2px 5px;
+  background-size: contain;
+}
+
+.button-contain-img {
+  width: 20px;
+  height: 25px;
+  background-image: url("../img/picture.svg");
+  background-repeat: no-repeat;
+  background-position: 0 3px;
+  background-size: contain;
+}
+
+.button-edit {
+  width: 20px;
+  height: 25px;
+  background-image: url("../img/edit.svg");
+  background-repeat: no-repeat;
+  background-position: 0 3px;
+  background-size: contain;
+}
+
+.button-delete {
+  width: 20px;
+  height: 25px;
+  background-image: url("../img/delete.svg");
+  background-repeat: no-repeat;
+  background-position: 0 3px;
+  background-size: contain;
 }
 
 .main__button {
