@@ -1,10 +1,10 @@
-import {setRequiredAttribute} from './modules/setRequiredAttribute.js';
+
 import {
   calculateTotalPrice, form,
   priceControl,
 } from './modules/priceControl.js';
 import {deleteGood} from './modules/serviceFeatures.js';
-import {formControl, modalControl} from './modules/modalControl.js';
+import {formControl, modalControl, setRequiredAttribute} from './modules/modalControl.js';
 
 const init = () => {
   setRequiredAttribute();
