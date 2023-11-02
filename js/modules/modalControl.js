@@ -57,6 +57,7 @@ isChecked.addEventListener('click', () => {
 export const formControl = (form, closeModal) => {
   form.addEventListener('submit', (event) => {
     event.preventDefault();
+
     const formData = new FormData(event.target);
     const newGood = Object.fromEntries(formData);
     const totalFormPrice = addGoodToPage(newGood, list);

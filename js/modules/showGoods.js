@@ -1,5 +1,4 @@
 // отображение таблицы вместе с добавленным товаром
-
 export const addGoodToPage = (good, list) => {
   const {tr, totalFormPrice} = createRow(good);
   list.prepend(tr);
@@ -14,10 +13,13 @@ export const createRow = (good) => {
   };
   const tr = document.createElement('tr');
   let td = document.createElement('td');
+
+  let btn = document.createElement('button');
   const idp = document.querySelector('.modal__product-id');
   td.textContent = idp.querySelector('span').textContent;
   tr.append(td);
   let {count, price} = good;
+  
   const entries = Object.entries(good);
   for (const [key, value] of entries) {
     if (key === 'description' || key === 'file') {
@@ -33,7 +35,13 @@ export const createRow = (good) => {
       tr.append(td);
       continue;
     }
-    
+    if (key === 'name') {
+      const productName = document.createElement('td');
+      productName.textContent = value.toString();
+      productName.classList.add('product__name')
+      tr.append(productName);
+      continue;
+    }
     td = document.createElement('td');
     td.textContent = value.toString();
     tr.append(td);
@@ -47,7 +55,9 @@ export const createRow = (good) => {
 // вывод для нового товара кнопок добавления изображения, редактирования и удаления
   td = document.createElement('td');
   td.classList.add('table__button-no-img');
-  td.innerHTML = `<button class="button-contain-img"></button>`;
+  btn.classList.add('button-contain-img');
+  btn.dataset.pic="./img/soundmax.jpg";
+  td.append(btn);
   tr.append(td);
   td = document.createElement('td');
   td.classList.add('table__button-edit');

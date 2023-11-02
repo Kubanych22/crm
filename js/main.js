@@ -3,7 +3,7 @@ import {
   calculateTotalPrice, form,
   priceControl,
 } from './modules/priceControl.js';
-import {deleteGood} from './modules/serviceFeatures.js';
+import {deleteGood, showPictureGood} from './modules/serviceFeatures.js';
 import {formControl, modalControl, setRequiredAttribute} from './modules/modalControl.js';
 
 const init = () => {
@@ -12,6 +12,7 @@ const init = () => {
   modalControl();
   priceControl();
   deleteGood();
+  showPictureGood();
   const {closeModal} = modalControl();
   formControl(form, closeModal);
 };
