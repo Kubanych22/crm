@@ -5,7 +5,7 @@ import {form, showTotalGoodsPrice} from './priceControl.js';
 
 const modal = document.querySelector('.modal');
 const isChecked = document.querySelector('.checkbox__input');
-let discountInput = document.querySelector('.discount-input');
+const discountInput = document.querySelector('.discount-input');
 const openModalBtn = document.querySelector('.main__button');
 const totalCost = document.querySelector('.form__cost-total');
 const list = document.querySelector('.table__tbody');
