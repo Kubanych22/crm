@@ -1,62 +1,67 @@
 // отображение таблицы вместе с добавленным товаром
+import {URL} from './renderGoods.js';
+
 export const addGoodToPage = (good, list) => {
-  const {tr, totalFormPrice} = createRow(good);
+  const {tr, totalGoodPrice} = createRow(good);
   list.prepend(tr);
-  return totalFormPrice;
+  return {tr, totalGoodPrice};
 };
 
 // создание строки в таблице для добавления товара
-
 export const createRow = (good) => {
-  const checkDiscount = ({discount, price}) => {
-    return (price - (price * discount) / 100);
-  };
   const tr = document.createElement('tr');
-  let td = document.createElement('td');
-
+  let td;
   let btn = document.createElement('button');
-  const idp = document.querySelector('.modal__product-id');
-  td.textContent = idp.querySelector('span').textContent;
-  tr.append(td);
-  let {count, price} = good;
   
-  const entries = Object.entries(good);
-  for (const [key, value] of entries) {
-    if (key === 'description' || key === 'file') {
-      continue;
-    }
-    if (key === 'checkbox__discount' || key === 'discount') {
-      price = checkDiscount(good);
-      continue;
-    }
-    if (key === 'price') {
-      td = document.createElement('td');
-      td.textContent = '$' + value;
-      tr.append(td);
-      continue;
-    }
-    if (key === 'name') {
-      const productName = document.createElement('td');
-      productName.textContent = value.toString();
-      productName.classList.add('product__name')
-      tr.append(productName);
-      continue;
-    }
-    td = document.createElement('td');
-    td.textContent = value.toString();
-    tr.append(td);
+  const id = document.createElement('td');
+  id.textContent = good.id;
+  tr.append(id);
+  
+  const goodName = document.createElement('td');
+  goodName.textContent = good.title;
+  goodName.classList.add('product__name')
+  tr.append(goodName);
+  
+  const category = document.createElement('td');
+  category.textContent = good.category;
+  tr.append(category);
+  
+  const units = document.createElement('td');
+  units.textContent = good.units;
+  tr.append(units)
+  
+  const countTd = document.createElement('td');
+  countTd.textContent = good.count;
+  tr.append(countTd);
+  const count = Number(good.count)
+  
+  const priceTd = document.createElement('td');
+  priceTd.textContent = good.price + ' ₽';
+  tr.append(priceTd)
+  const price = Number(good.price)
+  
+  const discountTd = document.createElement('td');
+  discountTd.textContent = good.discount;
+  discountTd.hidden = true;
+  tr.append(discountTd);
+  const discount = Number(good.discount);
+  let totalGoodPrice;
+  if (discount !== 0) {
+    totalGoodPrice = (price - (price * discount) / 100) * count;
+  } else {
+    totalGoodPrice = price * count;
   }
-  let totalFormPrice = price * count;
   td = document.createElement('td');
-  td.textContent = '$' + totalFormPrice;
+  td.textContent = totalGoodPrice + ' ₽';
   td.classList.add('total-cost');
   tr.append(td);
-
-// вывод для нового товара кнопок добавления изображения, редактирования и удаления
+  
   td = document.createElement('td');
   td.classList.add('table__button-no-img');
   btn.classList.add('button-contain-img');
-  btn.dataset.pic="./img/soundmax.jpg";
+  const imageGood = document.createElement('img');
+  imageGood.src = `${URL}/${good.image}`;
+  btn.append(imageGood);
   td.append(btn);
   tr.append(td);
   td = document.createElement('td');
@@ -68,9 +73,7 @@ export const createRow = (good) => {
   td.innerHTML = `<button class="button-delete"></button>`;
   tr.append(td);
   
-  return {
-    tr,
-    totalFormPrice,
-  };
+  return {tr, totalGoodPrice};
 };
+
 
