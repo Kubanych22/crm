@@ -100,5 +100,76 @@
     </div>
   </section>
 </main>
+
+<div class="modal close-modal">
+  <div class="modal__container">
+    <form class="modal__form form">
+      <div class="modal__product">
+        <h2 class="modal__title">Добавить товар</h2>
+      </div>
+      <hr class="form__line line">
+      <fieldset class="form__field">
+        <div class="form__field-wrapper">
+          <label class="form__label">
+            <span class="form__label-text">Наименование</span>
+            <input class="form__input" type="text" name="title">
+          </label>
+
+          <label class="form__label">
+            <span class="form__label-text">Категория</span>
+            <input class="form__input" type="text" name="category">
+          </label>
+        </div>
+
+        <label class="form__label">
+          <span class="form__label-text">Описание</span>
+          <textarea class="form__textarea" name="description"></textarea>
+        </label>
+
+        <label class="form__label">
+          <span class="form__label-text">Единицы измерения</span>
+          <input class="form__input" type="text" name="units">
+        </label>
+
+        <label class="form__label">
+          <span class="form__label-text">Количество</span>
+          <input class="form__input" type="number" name="count">
+        </label>
+
+        <label class="form__label checkbox">
+          <span class="form__label-text">Дисконт, %</span>
+          <input class="form__input checkbox__input" type="checkbox" name="checkbox__discount">
+          <input class="form__input discount-input" type="number" step="any" name="discount">
+        </label>
+
+        <label class="form__label form__label-last">
+          <span class="form__label-text">Цена</span>
+          <input class="form__input form__input-price" type="number" step="any" name="price">
+        </label>
+
+        <label class="form__label form__button btn">
+          <span class="form__label-text">Добавить изображение</span>
+          <input class="form__input-button" type="file" name="file" accept="image/*">
+        </label>
+      </fieldset>
+
+      <fieldset class="form__result">
+        <p class="form__cost">
+          <span class="form__cost-text">Итоговая стоимость:</span>
+          <span class="form__cost-total">$900.00</span>
+        </p>
+        <button class="form__submit-button btn" type="submit">Добавить товар</button>
+      </fieldset>
+
+    </form>
+    <button class="modal__close" type="button">
+      <svg class="modal__close-img" viewBox="0 0 24 24" fill="none"
+           xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 2L22 22" stroke-width="3" stroke-linecap="round"/>
+        <path d="M2 22L22 2" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+</div>
 </body>
 </html>

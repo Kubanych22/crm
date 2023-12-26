@@ -1,34 +1,76 @@
 // управление модальным окном
-
 import {addGoodToPage} from './showGoods.js';
-import {form, showTotalGoodsPrice} from './priceControl.js';
+import {setTotalPrice, showTotalGoodsPrice} from './priceControl.js';
 import {URL} from './renderGoods.js';
+import showModal from './modal.js';
 
-const modal = document.querySelector('.modal');
-const isChecked = document.querySelector('.checkbox__input');
-const discountInput = document.querySelector('.discount-input');
+let modal;
 const openModalBtn = document.querySelector('.main__button');
-const totalCost = document.querySelector('.form__cost-total');
 const list = document.querySelector('.table__tbody');
-const submitBnt = document.querySelector('.form__submit-button')
 
-const openModal = () => {
+const openModal = (isChecked, discountInput) => {
   modal.classList.remove('close-modal');
   modal.classList.add('open-modal');
   isChecked.checked = false;
   discountInput.disabled = true;
 };
 
-const closeModal = () => {
-  modal.classList.remove('open-modal');
-  modal.classList.add('close-modal');
+export const closeModal = () => {
+  modal.remove();
 };
-export const modalControl = () => {
-  openModalBtn.addEventListener('click', () => {
-    form.reset();
-    openModal();
-    totalCost.textContent = '';
+
+// организация ввода и отправки нового товара
+const formControl = async (form) => {
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const target = event.target;
+    const formData = new FormData(target);
+    const newGood = Object.fromEntries(formData);
+    
+    await fetchRequest(`${URL}/api/goods/`, {
+      method: 'POST',
+      body: newGood,
+      callback: renderGood,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    closeModal();
   });
+  
+  form.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+    }
+  });
+  
+  // функция установки атрибута required элементам формы
+  
+  const inputs = document.querySelectorAll('input');
+  const textAreas = document.querySelectorAll('textarea');
+  
+  const setRequiredAttribute = () => {
+    [...inputs].map(elem => {
+      if (elem.type !== 'checkbox' && elem.type !== 'file') {
+        elem.required = true;
+      }
+    });
+    [...textAreas].map(elem => elem.required = true);
+  };
+  
+  setRequiredAttribute();
+  
+};
+
+export const modalControl = async () => {
+  modal = await showModal();
+  const form = modal.querySelector('.modal__form');
+  const isChecked = document.querySelector('.checkbox__input');
+  const discountInput = document.querySelector('.discount-input');
+  
+  openModal(isChecked, discountInput);
+  const totalCost = document.querySelector('.form__cost-total');
+  totalCost.textContent = '';
   
   modal.addEventListener('click', (event) => {
     const target = event.target;
@@ -38,23 +80,57 @@ export const modalControl = () => {
     }
   });
   
-  return {
-    closeModal,
+  const countInput = document.querySelector('input[name=count]');
+  const discountInputForm = document.querySelector('input[name=discount]');
+  const priceInput = document.querySelector('input[name=price]');
+  
+  [countInput, discountInputForm, priceInput].forEach(item => {
+    item.addEventListener('change', () => {
+      setTotalPrice(form);
+    });
+  });
+  
+  // управление полем ввода дисконта при включении/отключении чекбокса
+  isChecked.addEventListener('click', () => {
+    if (isChecked.checked) {
+      discountInput.required = true;
+      discountInput.disabled = false;
+      discountInput.focus();
+    } else {
+      discountInput.required = false;
+      discountInput.disabled = true;
+      discountInput.value = '';
+    }
+  });
+  
+  await formControl(form);
+  
+  const inputElement = document.querySelector('.form__input-button');
+  const message = document.createElement('p');
+  
+  inputElement.addEventListener('change', () => {
+    const file = inputElement.files[0];
+    chechFileSize(file, message, form);
+  });
+  
+  const chechFileSize = (file, message, form) => {
+    const submitBnt = document.querySelector('.form__submit-button');
+    if (file.size > 1024 * 1024) {
+      message.classList.add('too__large-img');
+      message.textContent = 'Изображение не должно превышать размер 1 Мб';
+      form.append(message);
+      submitBnt.disabled = true;
+      return false;
+    } else {
+      message.remove();
+      submitBnt.disabled = false;
+      return true;
+    }
   };
+  return modal;
 };
 
-// управление полем ввода дисконта при включении/отключении чекбокса
-isChecked.addEventListener('click', () => {
-  if (isChecked.checked) {
-    discountInput.required = true;
-    discountInput.disabled = false;
-    discountInput.focus();
-  } else {
-    discountInput.required = false;
-    discountInput.disabled = true;
-    discountInput.value = '';
-  }
-});
+openModalBtn.addEventListener('click', modalControl);
 
 export const fetchRequest = async (url, {
   method = 'GET',
@@ -78,18 +154,17 @@ export const fetchRequest = async (url, {
       callback(new Error(`Ошибка! Проанализируйте код ошибки: ${response.status}- ${response.statusText}`));
       return;
     }
+    
     if (response.ok) {
-      const data = await response.json();
+      const dataObject = await response.json();
+      const data = dataObject.goods ? dataObject.goods : dataObject;
       if (callback) {
-        callback(null, data);
-        form.reset();
-        closeModal();
-        return;
+        return callback(null, data);
       }
     }
     throw new Error(`Неизвестная ошибка!: ${response.status}- ${response.statusText}`);
   } catch (err) {
-    callback(err);
+    return callback(err);
   }
 };
 
@@ -118,6 +193,7 @@ const createErrorPage = (errorMessage) => {
 export const renderGood = (err, data) => {
   if (err) {
     const errorModal = createErrorPage('Что-то пошло не так');
+    const form = modal.querySelector('.modal__form');
     form.append(errorModal);
     console.log(err);
     const handleModal = (evt) => {
@@ -125,7 +201,6 @@ export const renderGood = (err, data) => {
       const target = evt.target;
       const closeBtn = target.closest('.modal__error-close');
       if (!errorModal || closeBtn) {
-        form.reset();
         errorModal.classList.add('modal__error-hide');
         errorModal.classList.remove('modal__error');
         closeModal();
@@ -138,64 +213,3 @@ export const renderGood = (err, data) => {
   showTotalGoodsPrice(totalGoodPrice);
 };
 
-const inputElement = document.querySelector('.form__input-button');
-const message = document.createElement('p');
-
-export const getImgFile = () => {
-  inputElement.addEventListener('change', handleFiles, false);
-};
-
-const chechFileSize = (file) => {
-  if (file.size > 1024 * 1024) {
-    message.classList.add('too__large-img');
-    message.textContent = 'Изображение не должно превышать размер 1 Мб';
-    form.append(message);
-    submitBnt.disabled = true;
-    return false;
-  } else {
-    message.remove();
-    submitBnt.disabled = false;
-    return true;
-  }
-};
-
-const handleFiles = async () => {
-  message.remove();
-  const file = inputElement.files[0];
-  
-  if (!chechFileSize(file)) {
-    return;
-  }
-};
-
-// организация ввода нового товара
-export const formControl = (form) => {
-  form.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    
-    const formData = new FormData(event.target);
-    const newGood = Object.fromEntries(formData);
-    await fetchRequest(`${URL}/api/goods/`, {
-      method: 'POST',
-      body: newGood,
-      callback: renderGood,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-  });
-};
-
-// функция установки атрибута required элементам формы
-
-const inputs = document.querySelectorAll('input');
-const textAreas = document.querySelectorAll('textarea');
-
-export const setRequiredAttribute = () => {
-  [...inputs].map(elem => {
-    if (elem.type !== 'checkbox' && elem.type !== 'file') {
-      elem.required = true;
-    }
-  });
-  [...textAreas].map(elem => elem.required = true);
-};

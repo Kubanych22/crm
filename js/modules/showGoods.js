@@ -72,7 +72,6 @@ export const createRow = (good) => {
   td.classList.add('table__button-delete');
   td.innerHTML = `<button class="button-delete"></button>`;
   tr.append(td);
-  
   return {tr, totalGoodPrice};
 };
 

@@ -1,9 +1,7 @@
 // функция для отображения итоговой цены при добавлении товара
-
-export const form = document.querySelector('.modal__form');
 const mainTotalPrice = document.querySelector('.main__total-price');
 export {calculateTotalPrice, showTotalGoodsPrice};
-  export const setTotalPrice = () => {
+  export const setTotalPrice = (form) => {
     const count = form.count.value;
     const discount = form.discount.value;
     const price = form.price.value;
@@ -14,12 +12,9 @@ export {calculateTotalPrice, showTotalGoodsPrice};
     } else {
       totalFormPrice = price * count;
     }
-    totalFormCost.textContent = totalFormPrice;
+    totalFormCost.textContent = totalFormPrice.toString() + ' ₽';
     return totalFormPrice;
   };
-  
-  ['click', 'keyup', 'change'].forEach(event =>
-      form.addEventListener(event, setTotalPrice));
 
 // вычисление общей суммы товаров в таблице
 const calculateTotalPrice = () => {
