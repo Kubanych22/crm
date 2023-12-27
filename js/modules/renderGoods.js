@@ -2,8 +2,8 @@ import {calculateTotalPrice} from './priceControl.js';
 import {createRow} from './showGoods.js';
 
 const method = 'GET';
-// export const URL = 'https://ossified-synonymous-centipede.glitch.me';
-export const URL = 'http://localhost:3000';
+export const URL = 'https://ossified-synonymous-centipede.glitch.me';
+// export const URL = 'http://localhost:3000';
 
 export const loadGoods = (callback) => {
   const xhr = new XMLHttpRequest();
