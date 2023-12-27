@@ -1,7 +1,7 @@
 // удаление строки с товаром в таблице
 
 import {setTotalPrice, showTotalGoodsPrice} from './priceControl.js';
-import {fetchRequest, modalControl, toBase64} from './modalControl.js';
+import {fetchRequest, modalControl, showGoodImgPreview, toBase64} from './modalControl.js';
 import {URL} from './renderGoods.js';
 
 const table = document.querySelector('.table');
@@ -44,7 +44,8 @@ export const serviceFeatures = () => {
       checkboxDiscount.checked = true;
     }
     
-    image.textContent = data.image;
+    const src = `${URL}/${data.image}`;
+    showGoodImgPreview(src);
     
     setTotalPrice(form);
     [count, discountInput, price, checkboxDiscount].forEach(item => {

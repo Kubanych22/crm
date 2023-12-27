@@ -71,8 +71,20 @@ const formControl = async (form) => {
   };
   
   setRequiredAttribute();
-  
 };
+
+export const showGoodImgPreview = (file) => {
+  const formField = document.querySelector('.form__field')
+  const wrapper = document.createElement('div');
+  wrapper.classList.add('preview')
+  wrapper.style.width = 150 + 'px';
+  wrapper.style.gridColumn = 2;
+  wrapper.style.justifySelf = 'center';
+  const img = document.createElement('img');
+  img.src = file;
+  wrapper.append(img);
+  formField.append(wrapper);
+}
 
 export const modalControl = async () => {
   modal = await showModal();
@@ -116,20 +128,7 @@ export const modalControl = async () => {
   });
   
   await formControl(form);
-  
-  const showGoodImgPreview = (file) => {
-    const formField = document.querySelector('.form__field')
-    const wrapper = document.createElement('div');
-    wrapper.classList.add('preview')
-    wrapper.style.width = 150 + 'px';
-    wrapper.style.gridColumn = 2;
-    wrapper.style.justifySelf = 'center';
-    const img = document.createElement('img');
-    img.src = file;
-    wrapper.append(img);
-    formField.append(wrapper);
-  }
-  
+ 
   const inputElement = document.querySelector('.form__input-button');
   const message = document.createElement('p');
   

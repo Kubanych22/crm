@@ -132,7 +132,6 @@ const showModal = async (err, data) => {
   input.accept = 'image/*';
   label.append(span, input);
   fieldset.append(label);
-  
   form.append(product, hr, fieldset);
   
   const resultFieldSet = document.createElement('fieldset');
