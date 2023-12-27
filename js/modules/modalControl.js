@@ -19,6 +19,18 @@ export const closeModal = () => {
   modal.remove();
 };
 
+export const toBase64 = file => new Promise((resolve, reject) => {
+  const reader = new FileReader();
+  reader.addEventListener('loadend', () => {
+    resolve(reader.result);
+  });
+  
+  reader.addEventListener('error', err => {
+    reject(err);
+  });
+  reader.readAsDataURL(file);
+});
+
 // организация ввода и отправки нового товара
 const formControl = async (form) => {
   form.addEventListener('submit', async (event) => {
@@ -26,13 +38,13 @@ const formControl = async (form) => {
     const target = event.target;
     const formData = new FormData(target);
     const newGood = Object.fromEntries(formData);
-    
+    newGood.image = await toBase64(newGood.image);
     await fetchRequest(`${URL}/api/goods/`, {
       method: 'POST',
       body: newGood,
       callback: renderGood,
       headers: {
-        'Content-Type': 'application/json',
+        'Content-type': 'application/json; charset=UTF-8',
       },
     });
     closeModal();
@@ -105,16 +117,36 @@ export const modalControl = async () => {
   
   await formControl(form);
   
+  const showGoodImgPreview = (file) => {
+    const formField = document.querySelector('.form__field')
+    const wrapper = document.createElement('div');
+    wrapper.classList.add('preview')
+    wrapper.style.width = 150 + 'px';
+    wrapper.style.gridColumn = 2;
+    wrapper.style.justifySelf = 'center';
+    const img = document.createElement('img');
+    img.src = file;
+    wrapper.append(img);
+    formField.append(wrapper);
+  }
+  
   const inputElement = document.querySelector('.form__input-button');
   const message = document.createElement('p');
   
-  inputElement.addEventListener('change', () => {
+  inputElement.addEventListener('change', async () => {
     const file = inputElement.files[0];
-    chechFileSize(file, message, form);
+    if (chechFileSize(file, message, form)) {
+      const result = await toBase64(file);
+      showGoodImgPreview(result);
+    }
   });
   
   const chechFileSize = (file, message, form) => {
     const submitBnt = document.querySelector('.form__submit-button');
+    const preview = document.querySelector('.preview');
+    if (preview) {
+      preview.remove();
+    }
     if (file.size > 1024 * 1024) {
       message.classList.add('too__large-img');
       message.textContent = 'Изображение не должно превышать размер 1 Мб';
@@ -127,7 +159,7 @@ export const modalControl = async () => {
       return true;
     }
   };
-  return modal;
+  return {modal, closeModal};
 };
 
 openModalBtn.addEventListener('click', modalControl);

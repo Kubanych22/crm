@@ -1,7 +1,7 @@
 // удаление строки с товаром в таблице
 
 import {setTotalPrice, showTotalGoodsPrice} from './priceControl.js';
-import {closeModal, fetchRequest, modalControl} from './modalControl.js';
+import {fetchRequest, modalControl, toBase64} from './modalControl.js';
 import {URL} from './renderGoods.js';
 
 const table = document.querySelector('.table');
@@ -19,7 +19,7 @@ export const serviceFeatures = () => {
   };
   
   const showGoodInModal = async (err, data) => {
-    const modal = await modalControl();
+    const {modal, closeModal} = await modalControl();
     const form = modal.querySelector('.modal__form');
     let formData = new FormData(form);
     formData.append('discount', '');
@@ -61,6 +61,7 @@ export const serviceFeatures = () => {
     form.addEventListener('submit', async () => {
       formData = new FormData(form);
       const editedGood = Object.fromEntries(formData);
+      editedGood.image = await toBase64(editedGood.image);
       await fetchRequest(`${URL}/api/goods/${id}`, {
         method: 'PATCH',
         callback: showGoodInModal,
@@ -71,6 +72,7 @@ export const serviceFeatures = () => {
       });
       closeModal();
     });
+    return modal;
   };
   
   const deleteRow = async (delRow) => {
