@@ -1,5 +1,59 @@
 import loadStyle from './loadStyle.js';
 
+const checkInputs = () => {
+  const checkName = () => {
+    const input = document.querySelector('.good__name');
+    checkInput(input);
+  };
+  
+  const checkCategory = () => {
+    const input = document.querySelector('.good__category');
+    checkInput(input);
+  };
+  
+  const checkDescription = () => {
+    const input = document.querySelector('.good__description');
+    checkInput(input);
+  };
+  
+  const checkUnit = () => {
+    const input = document.querySelector('.good__unit');
+    checkInput2(input);
+  };
+  
+  const checkAmount = () => {
+    const input = document.querySelector('.good__amount');
+    checkInputNumbers(input);
+  };
+  
+  checkName()
+  checkCategory()
+  checkDescription()
+  checkUnit()
+  checkAmount()
+};
+
+const checkInput = (input) => {
+  input.addEventListener('input', (e) => {
+    e.preventDefault();
+    input.value = input.value.replace(/[^а-я\s]/ig, '')
+  });
+};
+
+const checkInput2 = (input) => {
+  input.addEventListener('input', (e) => {
+    e.preventDefault();
+    input.value = input.value.replace(/[^а-я]/ig, '')
+  });
+};
+
+const checkInputNumbers = (input) => {
+  input.addEventListener('input', (e) => {
+    e.preventDefault();
+    input.value = input.value.replace(/\D/ig, '')
+  });
+};
+
 const showModal = async (err, data) => {
   await loadStyle('style/modal.css');
   const modal = document.createElement('div');
@@ -32,7 +86,7 @@ const showModal = async (err, data) => {
   span.classList.add('form__label-text');
   span.textContent = 'Наименование';
   let input = document.createElement('input');
-  input.classList.add('form__input');
+  input.classList.add('form__input', 'good__name');
   input.type = 'text';
   input.name = 'title';
   label.append(span, input);
@@ -45,7 +99,7 @@ const showModal = async (err, data) => {
   span.classList.add('form__label-text');
   span.textContent = 'Категория';
   input = document.createElement('input');
-  input.classList.add('form__input');
+  input.classList.add('form__input', 'good__category');
   input.name = 'category';
   label.append(span, input);
   
@@ -59,8 +113,9 @@ const showModal = async (err, data) => {
   span.classList.add('form__label-text');
   span.textContent = 'Описание';
   const textArea = document.createElement('textarea');
-  textArea.classList.add('form__textarea');
+  textArea.classList.add('form__textarea', 'good__description');
   textArea.name = 'description';
+  textArea.maxLength = 80;
   label.append(span, textArea);
   fieldset.append(label);
   
@@ -70,7 +125,7 @@ const showModal = async (err, data) => {
   span.classList.add('form__label-text');
   span.textContent = 'Единицы измерения';
   input = document.createElement('input');
-  input.classList.add('form__input');
+  input.classList.add('form__input', 'good__unit');
   input.name = 'units';
   label.append(span, input);
   fieldset.append(label);
@@ -81,7 +136,7 @@ const showModal = async (err, data) => {
   span.classList.add('form__label-text');
   span.textContent = 'Количество';
   input = document.createElement('input');
-  input.classList.add('form__input');
+  input.classList.add('form__input', 'good__amount');
   input.name = 'count';
   input.type = 'number';
   label.append(span, input);
@@ -98,9 +153,10 @@ const showModal = async (err, data) => {
   checkboxInput.type = 'checkbox';
   checkboxInput.name = 'checkbox__discount';
   input = document.createElement('input');
-  input.classList.add('form__input');
+  input.classList.add('form__input', 'good__discount');
   input.classList.add('discount-input');
   input.name = 'discount';
+  input.type= 'number';
   input.step = 'any';
   label.append(span, checkboxInput, input);
   fieldset.append(label);
@@ -112,7 +168,7 @@ const showModal = async (err, data) => {
   span.classList.add('form__label-text');
   span.textContent = 'Цена';
   input = document.createElement('input');
-  input.classList.add('form__input');
+  input.classList.add('form__input', 'good__price');
   input.name = 'price';
   input.type = 'number';
   input.step = 'any';
@@ -169,6 +225,8 @@ const showModal = async (err, data) => {
   container.append(form, close);
   modal.append(container);
   document.body.append(modal);
+  
+  checkInputs();
   
   new Promise(resolve => {
     close.addEventListener('click', () => {
