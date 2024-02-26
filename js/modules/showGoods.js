@@ -47,10 +47,11 @@ export const createRow = (good) => {
   const discount = Number(good.discount);
   let totalGoodPrice;
   if (discount !== 0) {
-    totalGoodPrice = (price - (price * discount) / 100) * count;
+    totalGoodPrice = ((price - (price * discount) / 100) * count);
   } else {
     totalGoodPrice = price * count;
   }
+  totalGoodPrice = Number.isInteger(totalGoodPrice) ? totalGoodPrice : totalGoodPrice.toFixed(2);
   td = document.createElement('td');
   td.textContent = totalGoodPrice + ' ₽';
   td.classList.add('total-cost');

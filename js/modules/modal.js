@@ -1,4 +1,5 @@
 import loadStyle from './loadStyle.js';
+import {CATEGORY} from './search.js';
 
 const checkInputs = () => {
   const checkName = () => {
@@ -26,6 +27,11 @@ const checkInputs = () => {
     checkInputNumbers(input);
   };
   
+  const checkSearch = () => {
+    const input = document.querySelector('.search__input');
+    checkInput(input);
+  };
+  
   checkName()
   checkCategory()
   checkDescription()
@@ -36,7 +42,7 @@ const checkInputs = () => {
 const checkInput = (input) => {
   input.addEventListener('input', (e) => {
     e.preventDefault();
-    input.value = input.value.replace(/[^а-я\s]/ig, '')
+    input.value = input.value.replace(/([^a-zA-Zа-яёЁ0-9 _-]+)$/ig, '')
   });
 };
 
@@ -101,10 +107,20 @@ const showModal = async (err, data) => {
   input = document.createElement('input');
   input.classList.add('form__input', 'good__category');
   input.name = 'category';
+  input.setAttribute('list', 'category-list');
   label.append(span, input);
   
   wrapper.append(label);
   
+  const dataList = document.createElement('datalist');
+  dataList.id = 'category-list';
+  CATEGORY.map(item => {
+    let option = document.createElement('option');
+    option.value = item;
+    dataList.append(option);
+  })
+  
+  wrapper.append(dataList);
   fieldset.append(wrapper);
   
   label = document.createElement('label');
@@ -115,7 +131,7 @@ const showModal = async (err, data) => {
   const textArea = document.createElement('textarea');
   textArea.classList.add('form__textarea', 'good__description');
   textArea.name = 'description';
-  textArea.maxLength = 80;
+  textArea.maxLength = 120;
   label.append(span, textArea);
   fieldset.append(label);
   

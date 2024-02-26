@@ -1,16 +1,29 @@
-// удаление строки с товаром в таблице
-
 import {setTotalPrice, showTotalGoodsPrice} from './priceControl.js';
-import {fetchRequest, modalControl, showGoodImgPreview, toBase64} from './modalControl.js';
+import {
+  fetchRequest,
+  modalControl,
+  newImage,
+  renderGood,
+  showGoodImgPreview,
+} from './modalControl.js';
 import {URL} from './renderGoods.js';
+import warningModal from './warningModal.js';
+import {search} from './search.js';
 
+const btnSearch = document.querySelector('.button-search');
 const table = document.querySelector('.table');
 let id;
+
+btnSearch.addEventListener('click', (e) => {
+  e.preventDefault();
+  search(btnSearch);
+});
 
 export const serviceFeatures = () => {
   const editGood = async (good) => {
     id = good.firstChild.textContent;
     await fetchRequest(`${URL}/api/goods/${id}`, {
+      method: 'GET',
       callback: showGoodInModal,
       headers: {
         'Content-Type': 'application/json',
@@ -19,12 +32,13 @@ export const serviceFeatures = () => {
   };
   
   const showGoodInModal = async (err, data) => {
-    const {modal, closeModal} = await modalControl();
+    let {modal} = await modalControl('PATCH');
     const form = modal.querySelector('.modal__form');
     let formData = new FormData(form);
     formData.append('discount', '');
     const title = modal.querySelector('input[name=title]');
     const category = modal.querySelector('input[name=category]');
+    category.setAttribute('list', 'category-list');
     let textArea = modal.querySelector('textarea');
     const units = modal.querySelector('input[name=units]');
     const count = modal.querySelector('input[name=count]');
@@ -44,10 +58,13 @@ export const serviceFeatures = () => {
       checkboxDiscount.checked = true;
     }
     
+    image.src = data.image;
+    
     const src = `${URL}/${data.image}`;
     showGoodImgPreview(src);
     
     setTotalPrice(form);
+    
     [count, discountInput, price, checkboxDiscount].forEach(item => {
       item.addEventListener('change', () => {
         setTotalPrice(form);
@@ -62,18 +79,18 @@ export const serviceFeatures = () => {
     form.addEventListener('submit', async () => {
       formData = new FormData(form);
       const editedGood = Object.fromEntries(formData);
-      editedGood.image = await toBase64(editedGood.image);
+      editedGood.discount = discountInput.value;
+      editedGood.id = id;
+      editedGood.image = data.image === newImage ? data.image : newImage;
       await fetchRequest(`${URL}/api/goods/${id}`, {
         method: 'PATCH',
-        callback: showGoodInModal,
+        callback: renderGood,
         body: editedGood,
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json; charset=UTF-8',
         },
       });
-      closeModal();
     });
-    return modal;
   };
   
   const deleteRow = async (delRow) => {
@@ -121,11 +138,11 @@ export const serviceFeatures = () => {
     newPage.document.body.append(productName, img, detailInformation);
   };
   
-  function callback() {
+  const callback = () => {
     return function () {
       return undefined;
     };
-  }
+  };
   
   table.addEventListener('click', async (e) => {
     e.preventDefault();
@@ -134,8 +151,16 @@ export const serviceFeatures = () => {
     const btnPict = target.closest('.button-contain-img');
     const btnEdit = target.closest('.button-edit');
     if (btnDel) {
-      const delRow = target.closest('tr');
-      await deleteRow(delRow);
+      const modal = await warningModal();
+      modal.classList.remove('close-modal');
+      modal.classList.add('open-modal');
+      const btnYes = document.querySelector('.btn-yes');
+      btnYes.addEventListener('click', (event) => {
+        event.preventDefault();
+        const delRow = target.closest('tr');
+        deleteRow(delRow);
+        modal.remove();
+      });
     }
     if (btnPict) {
       const tr = target.closest('tr');

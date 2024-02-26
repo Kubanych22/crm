@@ -8,6 +8,8 @@ let modal;
 const openModalBtn = document.querySelector('.main__button');
 const list = document.querySelector('.table__tbody');
 
+export let newImage;
+
 const openModal = (isChecked, discountInput) => {
   modal.classList.remove('close-modal');
   modal.classList.add('open-modal');
@@ -32,12 +34,12 @@ export const toBase64 = file => new Promise((resolve, reject) => {
 });
 
 // организация ввода и отправки нового товара
-const formControl = async (form) => {
+export const formControl = async (form) => {
+  let newGood;
   form.addEventListener('submit', async (event) => {
-    event.preventDefault();
     const target = event.target;
     const formData = new FormData(target);
-    const newGood = Object.fromEntries(formData);
+    newGood = Object.fromEntries(formData);
     newGood.image = await toBase64(newGood.image);
     await fetchRequest(`${URL}/api/goods/`, {
       method: 'POST',
@@ -74,9 +76,9 @@ const formControl = async (form) => {
 };
 
 export const showGoodImgPreview = (file) => {
-  const formField = document.querySelector('.form__field')
+  const formField = document.querySelector('.form__field');
   const wrapper = document.createElement('div');
-  wrapper.classList.add('preview')
+  wrapper.classList.add('preview');
   wrapper.style.width = 150 + 'px';
   wrapper.style.gridColumn = 2;
   wrapper.style.justifySelf = 'center';
@@ -84,9 +86,9 @@ export const showGoodImgPreview = (file) => {
   img.src = file;
   wrapper.append(img);
   formField.append(wrapper);
-}
+};
 
-export const modalControl = async () => {
+export const modalControl = async (method) => {
   modal = await showModal();
   const form = modal.querySelector('.modal__form');
   const isChecked = document.querySelector('.checkbox__input');
@@ -127,16 +129,18 @@ export const modalControl = async () => {
     }
   });
   
-  await formControl(form);
- 
+  if (method !== 'PATCH') {
+    await formControl(form);
+  }
+  
   const inputElement = document.querySelector('.form__input-button');
   const message = document.createElement('p');
   
   inputElement.addEventListener('change', async () => {
     const file = inputElement.files[0];
     if (chechFileSize(file, message, form)) {
-      const result = await toBase64(file);
-      showGoodImgPreview(result);
+      newImage = await toBase64(file);
+      showGoodImgPreview(newImage);
     }
   });
   
@@ -164,7 +168,7 @@ export const modalControl = async () => {
 openModalBtn.addEventListener('click', modalControl);
 
 export const fetchRequest = async (url, {
-  method = 'GET',
+  method,
   callback,
   body,
   headers,
