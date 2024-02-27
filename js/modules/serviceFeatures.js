@@ -1,18 +1,22 @@
 import {setTotalPrice, showTotalGoodsPrice} from './priceControl.js';
 import {
+  closeModal,
   fetchRequest,
   modalControl,
   newImage,
   renderGood,
   showGoodImgPreview,
 } from './modalControl.js';
-import {URL} from './renderGoods.js';
+import {loadGoods, renderGoods, URL} from './renderGoods.js';
 import warningModal from './warningModal.js';
 import {search} from './search.js';
 
 const btnSearch = document.querySelector('.button-search');
 const table = document.querySelector('.table');
 let id;
+export let pageNumber = 1;
+const list = document.querySelector('.table__tbody');
+const mainTotalPrice = document.querySelector('.main__total-price');
 
 btnSearch.addEventListener('click', (e) => {
   e.preventDefault();
@@ -66,7 +70,8 @@ export const serviceFeatures = () => {
     setTotalPrice(form);
     
     [count, discountInput, price, checkboxDiscount].forEach(item => {
-      item.addEventListener('change', () => {
+      item.addEventListener('change', (e) => {
+        e.preventDefault();
         setTotalPrice(form);
       });
       form.addEventListener('keydown', (e) => {
@@ -76,8 +81,10 @@ export const serviceFeatures = () => {
       });
     });
     
-    form.addEventListener('submit', async () => {
-      formData = new FormData(form);
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const target = e.target;
+      formData = new FormData(target);
       const editedGood = Object.fromEntries(formData);
       editedGood.discount = discountInput.value;
       editedGood.id = id;
@@ -87,9 +94,13 @@ export const serviceFeatures = () => {
         callback: renderGood,
         body: editedGood,
         headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
+          'Content-Type': 'application/json',
         },
       });
+      closeModal();
+      const list = document.querySelector('.table__tbody');
+      list.innerHTML = '';
+      loadGoods(renderGoods);
     });
   };
   
@@ -150,6 +161,9 @@ export const serviceFeatures = () => {
     const btnDel = target.closest('.button-delete');
     const btnPict = target.closest('.button-contain-img');
     const btnEdit = target.closest('.button-edit');
+    const btnNextPage = target.closest('.next__page');
+    const btnPrevPage = target.closest('.prev__page');
+    
     if (btnDel) {
       const modal = await warningModal();
       modal.classList.remove('close-modal');
@@ -169,6 +183,24 @@ export const serviceFeatures = () => {
     if (btnEdit) {
       const editRow = target.closest('tr');
       await editGood(editRow);
+    }
+    if (btnNextPage) {
+      list.innerHTML = '';
+      loadGoods(renderGoods, ++pageNumber);
+      if (list.innerHTML === '') {
+        pageNumber--;
+        mainTotalPrice.textContent = '';
+      }
+      
+    }
+    if (btnPrevPage) {
+      pageNumber--;
+      if (pageNumber === 0) {
+        pageNumber = 1;
+        mainTotalPrice.textContent = '';
+      }
+      list.innerHTML = '';
+      loadGoods(renderGoods, pageNumber);
     }
   });
 };

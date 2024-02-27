@@ -131,7 +131,7 @@ const showModal = async (err, data) => {
   const textArea = document.createElement('textarea');
   textArea.classList.add('form__textarea', 'good__description');
   textArea.name = 'description';
-  textArea.maxLength = 120;
+  textArea.maxLength = 240;
   label.append(span, textArea);
   fieldset.append(label);
   

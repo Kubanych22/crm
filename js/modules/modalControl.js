@@ -1,8 +1,8 @@
 // управление модальным окном
-import {addGoodToPage} from './showGoods.js';
 import {setTotalPrice, showTotalGoodsPrice} from './priceControl.js';
-import {URL} from './renderGoods.js';
+import {loadGoods, renderGoods, URL} from './renderGoods.js';
 import showModal from './modal.js';
+import {addGoodToPage} from './showGoods';
 
 let modal;
 const openModalBtn = document.querySelector('.main__button');
@@ -37,6 +37,7 @@ export const toBase64 = file => new Promise((resolve, reject) => {
 export const formControl = async (form) => {
   let newGood;
   form.addEventListener('submit', async (event) => {
+    event.preventDefault();
     const target = event.target;
     const formData = new FormData(target);
     newGood = Object.fromEntries(formData);
@@ -46,10 +47,13 @@ export const formControl = async (form) => {
       body: newGood,
       callback: renderGood,
       headers: {
-        'Content-type': 'application/json; charset=UTF-8',
+        'Content-type': 'application/json',
       },
     });
     closeModal();
+    const list = document.querySelector('.table__tbody');
+    list.innerHTML = '';
+    loadGoods(renderGoods);
   });
   
   form.addEventListener('keydown', (e) => {

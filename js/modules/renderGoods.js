@@ -2,14 +2,16 @@ import {calculateTotalPrice} from './priceControl.js';
 import {createRow} from './showGoods.js';
 
 const method = 'GET';
-// export const URL = 'https://ossified-synonymous-centipede.glitch.me';
-export const URL = 'http://localhost:3000';
+export const URL = 'https://ossified-synonymous-centipede.glitch.me';
+// export const URL = 'http://localhost:3000';
 
-export const loadGoods = (callback) => {
+export let pages = 1;
+export const loadGoods = (callback, page = 1) => {
   const xhr = new XMLHttpRequest();
-  xhr.open(method, `${URL}/api/goods/`);
+  xhr.open(method, `${URL}/api/goods/?page=${page.toString()}`);
   xhr.addEventListener('load', () => {
     const dataObject = JSON.parse(xhr.response);
+    pages = dataObject.pages;
     const data = dataObject.goods;
     callback(data);
   });

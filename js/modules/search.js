@@ -1,5 +1,6 @@
-import {URL} from './renderGoods.js';
+import {pages, URL} from './renderGoods.js';
 import {createRow} from './showGoods.js';
+import {pageNumber} from './serviceFeatures.js';
 
 export let CATEGORY;
 
@@ -57,8 +58,8 @@ export const search = async (btnSearch) => {
     let foundGoods = [];
     data.map(good => {
       const words = title.split(' ');
-      for (const word of words) {
-        if (good.title.includes(word)) {
+      for (let word of words) {
+        if (good.title.toLowerCase().includes(word.toLowerCase())) {
           foundGoods.push(good);
           return;
         }
@@ -71,7 +72,7 @@ export const search = async (btnSearch) => {
     data.map(good => {
       const words = title.split(' ');
       for (const word of words) {
-        if (good.category.includes(word)) {
+        if (good.category.toLowerCase().includes(word.toLowerCase())) {
           foundGoods.push(good);
           return;
         }
@@ -83,17 +84,22 @@ export const search = async (btnSearch) => {
     console.log('Товар не найден');
   };
   
-  const callback = (data) => {
-    renderFoundGoods(searchGoods(data));
+  let resultData = [];
+  const callback = (data, currentPage) => {
+    if (currentPage <= pages) {
+      resultData = resultData.concat(data)
+    } else {
+      renderFoundGoods(searchGoods(resultData));
+    }
   };
   
-  const loadFoundGoods = async (callback) => {
+  const loadFoundGoods = async (callback, page) => {
     const xhr = new XMLHttpRequest();
-    await xhr.open('GET', `${URL}/api/goods/`);
+    await xhr.open('GET', `${URL}/api/goods/?page=${page}`);
     xhr.addEventListener('load', () => {
       const dataObject = JSON.parse(xhr.response);
       const data = dataObject.goods;
-      callback(data);
+      callback(data, page);
     });
     
     xhr.addEventListener('error', () => {
@@ -103,5 +109,7 @@ export const search = async (btnSearch) => {
     xhr.send();
   };
   
-  await loadFoundGoods(callback);
+  for (let page = 1; page <= pages + 1; page++) {
+    await loadFoundGoods(callback, page);
+  }
 };
